@@ -76,7 +76,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
                 ReportMetric("global/bytes_in", "bytes/sec", processors["global_bytes_in"].Process(globalStats.total_bytes_in));
                 ReportMetric("global/bytes_out", "bytes/sec", processors["global_bytes_out"].Process(globalStats.total_bytes_out));
                 ReportMetric("global/current_conn", "connections", globalStats.total_current_conn);
-                ReportMetric("global/sys_mem_used", "percent", (globalStats.sys_mem_in_use/globalStats.sys_mem_total));
+                ReportMetric("global/sys_mem_used", "percent", ((globalStats.sys_mem_in_use/globalStats.sys_mem_total)*100));
                 ReportMetric("global/sys_cpu_busy_percent", "percent", globalStats.sys_cpu_busy_percent);
             }
             catch
