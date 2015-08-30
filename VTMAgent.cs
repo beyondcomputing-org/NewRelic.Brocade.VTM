@@ -53,9 +53,36 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
         /// </summary>
         public override void PollCycle()
         {
+            PollGlobal();
             PollVirtualServer();
             PollNodes();
             PollPool();
+        }
+
+        private void PollGlobal()
+        {
+            try
+            {
+                // Setup new EpochProcessors for Global Stats
+                // Check for existance of first Dictionary Item for the Global Stats
+                if (!processors.ContainsKey("global_bytes_in"))
+                {
+                    processors.Add("global_bytes_in", new EpochProcessor());
+                    processors.Add("global_bytes_out", new EpochProcessor());
+                }
+
+                // Get Global Statistics and report to New Relic
+                GlobalStatistics globalStats = VTM.fetchGlobalStats();
+                ReportMetric("global/bytes_in", "bytes/sec", processors["global_bytes_in"].Process(globalStats.total_bytes_in));
+                ReportMetric("global/bytes_out", "bytes/sec", processors["global_bytes_out"].Process(globalStats.total_bytes_out));
+                ReportMetric("global/current_conn", "connections", globalStats.total_current_conn);
+                ReportMetric("global/sys_mem_used", "percent", (globalStats.sys_mem_in_use/globalStats.sys_mem_total));
+                ReportMetric("global/sys_cpu_busy_percent", "percent", globalStats.sys_cpu_busy_percent);
+            }
+            catch
+            {
+                log.Error("Unable to fetch Virtual Server information from the Virtual Traffic Manager '{0}'", this.name);
+            }
         }
 
         private void PollPool()

@@ -29,6 +29,21 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
 
         }
 
+        public GlobalStatistics fetchGlobalStats()
+        {
+            HttpResponseMessage response = client.GetAsync("/api/tm/3.3/status/local_tm/statistics/globals").Result;  // Blocking call!
+            if (response.IsSuccessStatusCode)
+            {
+                // Parse the response body. Blocking!
+                return (response.Content.ReadAsAsync<GlobalStatObject>().Result).statistics;
+            }
+            else
+            {
+                Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
+                return null;
+            }
+        }
+
         public VirtualServerStatistics fetchVirtualServerStats(string href)
         {
             HttpResponseMessage response = client.GetAsync(href).Result;  // Blocking call!
