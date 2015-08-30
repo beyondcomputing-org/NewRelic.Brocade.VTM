@@ -1,0 +1,18 @@
+﻿{
+  "agents": [
+        {
+        "name": "LB 1",
+        "host": "HOSTNAME",
+        "port": "9070",
+        "username": "admin",
+        "password": "password"
+    },
+    {
+        "name": "LB 2",
+        "host": "HOSTNAME",
+        "port": "9070",
+        "username": "admin",
+        "password": "password"
+    }
+  ]
+}
