@@ -2,9 +2,9 @@
 New Relic plugin for Brocade Virtual Traffic Manager
 
 # Requirements
-.Net 4.5
-Brocade Virtual Traffic Manager v9.9+ or Stingray SteelApp Traffic Manager 9.9+
-Traffic Manager API 3.3
+1. .Net 4.5
+2. Brocade Virtual Traffic Manager v9.9+ or Stingray SteelApp Traffic Manager 9.9+
+3. Traffic Manager API 3.3
 
 # Installation
 1. Download release and unzip on machine to handle monitoring.
