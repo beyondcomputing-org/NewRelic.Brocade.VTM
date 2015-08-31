@@ -16,6 +16,8 @@ It is highly recommended that you do not use the default or full admin user acco
 3. Create a new User
 4. Assign user to previously created group
 
+Certificates - You must use a DNS name when connecting to the load balancer as all communication is sent using HTTPS.  You will also need to have a valid certificate or import the self-signed certificate into the windows cert store on the monitoring box.
+
 # Installation
 1. Download release and unzip on machine to handle monitoring.
 2. Edit Config Files
