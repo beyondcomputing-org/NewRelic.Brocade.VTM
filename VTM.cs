@@ -29,112 +29,20 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
 
         }
 
-        public GlobalStatistics fetchGlobalStats()
-        {
-            HttpResponseMessage response = client.GetAsync("/api/tm/3.3/status/local_tm/statistics/globals").Result;  // Blocking call!
-            if (response.IsSuccessStatusCode)
-            {
-                // Parse the response body. Blocking!
-                return (response.Content.ReadAsAsync<GlobalStatObject>().Result).statistics;
-            }
-            else
-            {
-                Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
-                return null;
-            }
-        }
-
-        public VirtualServerStatistics fetchVirtualServerStats(string href)
+        public T fetchVTMObject<T>(string href)
         {
             HttpResponseMessage response = client.GetAsync(href).Result;  // Blocking call!
             if (response.IsSuccessStatusCode)
             {
                 // Parse the response body. Blocking!
-                return (response.Content.ReadAsAsync<VirtualServerStatObject>().Result).statistics;
+                return  response.Content.ReadAsAsync<T>().Result;
             }
             else
             {
                 Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
-                return null;
+                throw new ApplicationException("Error retrieving data from VTM");
             }
         }
 
-        public Children fetchVirtualServers()
-        {
-            // List data response.
-            HttpResponseMessage response = client.GetAsync("/api/tm/3.3/status/local_tm/statistics/virtual_servers").Result;  // Blocking call!
-            if (response.IsSuccessStatusCode)
-            {
-                // Parse the response body. Blocking!
-                return response.Content.ReadAsAsync<Children>().Result;
-            }
-            else
-            {
-                Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
-                return null;
-            }
-        }
-
-        public NodeStatistics fetchNodeStats(string href)
-        {
-            HttpResponseMessage response = client.GetAsync(href).Result;  // Blocking call!
-            if (response.IsSuccessStatusCode)
-            {
-                // Parse the response body. Blocking!
-                return (response.Content.ReadAsAsync<NodeStatObject>().Result).statistics;
-            }
-            else
-            {
-                Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
-                return null;
-            }
-        }
-
-        public Children fetchNodes()
-        {
-            // List data response.
-            HttpResponseMessage response = client.GetAsync("/api/tm/3.3/status/local_tm/statistics/nodes/node").Result;  // Blocking call!
-            if (response.IsSuccessStatusCode)
-            {
-                // Parse the response body. Blocking!
-                return response.Content.ReadAsAsync<Children>().Result;
-            }
-            else
-            {
-                Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
-                return null;
-            }
-        }
-
-        public PoolStatistics fetchPoolStats(string href)
-        {
-            HttpResponseMessage response = client.GetAsync(href).Result;  // Blocking call!
-            if (response.IsSuccessStatusCode)
-            {
-                // Parse the response body. Blocking!
-                return (response.Content.ReadAsAsync<PoolStatObject>().Result).statistics;
-            }
-            else
-            {
-                Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
-                return null;
-            }
-        }
-
-        public Children fetchPools()
-        {
-            // List data response.
-            HttpResponseMessage response = client.GetAsync("/api/tm/3.3/status/local_tm/statistics/pools").Result;  // Blocking call!
-            if (response.IsSuccessStatusCode)
-            {
-                // Parse the response body. Blocking!
-                return response.Content.ReadAsAsync<Children>().Result;
-            }
-            else
-            {
-                Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
-                return null;
-            }
-        }
     }
 }

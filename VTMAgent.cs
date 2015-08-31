@@ -72,7 +72,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
                 }
 
                 // Get Global Statistics and report to New Relic
-                GlobalStatistics globalStats = VTM.fetchGlobalStats();
+                GlobalStatistics globalStats = VTM.fetchVTMObject<GlobalStatObject>("/api/tm/3.3/status/local_tm/statistics/globals").statistics;
 
                 // Calculate System Memory Percent Used
                 float systemMemoryPercentUsed = (((float)globalStats.sys_mem_in_use) / (globalStats.sys_mem_total))*100;
@@ -93,7 +93,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
         {
             try
             {
-                Children pools = VTM.fetchPools();
+                Children pools = VTM.fetchVTMObject<Children>("/api/tm/3.3/status/local_tm/statistics/pools");
 
                 foreach (var pool in pools.children)
                 {
@@ -106,7 +106,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
                     }
 
                     // Get Pool Statistics and report to New Relic
-                    PoolStatistics poolStats = VTM.fetchPoolStats(pool.href);
+                    PoolStatistics poolStats = VTM.fetchVTMObject<PoolStatObject>(pool.href).statistics;
                     ReportMetric("pools/" + pool.name + "/bytes_in", "bytes/sec", processors["pool_" + pool.name + "_bytes_in"].Process(poolStats.bytes_in));
                     ReportMetric("pools/" + pool.name + "/bytes_out", "bytes/sec", processors["pool_" + pool.name + "_bytes_out"].Process(poolStats.bytes_out));
                     ReportMetric("pools/" + pool.name + "/nodes", "nodes", poolStats.nodes);
@@ -122,7 +122,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
         {
             try
             {
-                Children nodes = VTM.fetchNodes();
+                Children nodes = VTM.fetchVTMObject<Children>("/api/tm/3.3/status/local_tm/statistics/nodes/node");
 
                 foreach (var node in nodes.children)
                 {
@@ -135,7 +135,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
                     }
 
                     // Get Node Statistics and report to New Relic
-                    NodeStatistics nodeStats = VTM.fetchNodeStats(node.href);
+                    NodeStatistics nodeStats = VTM.fetchVTMObject<NodeStatObject>(node.href).statistics;
                     ReportMetric("nodes/" + node.name + "/errors", "sec", processors["node_" + node.name + "_errors"].Process(nodeStats.errors));
                     ReportMetric("nodes/" + node.name + "/failures", "sec", processors["node_" + node.name + "_failures"].Process(nodeStats.failures));
                     ReportMetric("nodes/" + node.name + "/current_conn", "connections", nodeStats.current_conn);
@@ -152,7 +152,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
         {
             try
             {
-                Children virtualServers = VTM.fetchVirtualServers();
+                Children virtualServers = VTM.fetchVTMObject<Children>("/api/tm/3.3/status/local_tm/statistics/virtual_servers");
 
                 foreach (var virtualServer in virtualServers.children)
                 {
@@ -165,7 +165,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
                     }
 
                     // Get Virtual Server Statistics and report to New Relic
-                    VirtualServerStatistics virtualServerStats = VTM.fetchVirtualServerStats(virtualServer.href);
+                    VirtualServerStatistics virtualServerStats = VTM.fetchVTMObject<VirtualServerStatObject>(virtualServer.href).statistics;
                     ReportMetric("virtual_servers/" + virtualServer.name + "/bytes_in", "bytes/sec", processors["vs_" + virtualServer.name + "_bytes_in"].Process(virtualServerStats.bytes_in));
                     ReportMetric("virtual_servers/" + virtualServer.name + "/bytes_out", "bytes/sec", processors["vs_" + virtualServer.name + "_bytes_out"].Process(virtualServerStats.bytes_out));
                     ReportMetric("virtual_servers/" + virtualServer.name + "/current_conn", "connections", virtualServerStats.current_conn);
