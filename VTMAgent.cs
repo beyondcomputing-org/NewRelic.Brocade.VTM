@@ -77,8 +77,8 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
                 // Calculate System Memory Percent Used
                 float systemMemoryPercentUsed = (((float)globalStats.sys_mem_in_use) / (globalStats.sys_mem_total))*100;
 
-                ReportMetric("global/bytes_in", "bytes/sec", processors["global_bytes_in"].Process(globalStats.total_bytes_in));
-                ReportMetric("global/bytes_out", "bytes/sec", processors["global_bytes_out"].Process(globalStats.total_bytes_out));
+                ReportMetric("global/throughput/Received", "mebibits/second", processors["global_bytes_in"].Process(globalStats.total_bytes_in) / 131072);
+                ReportMetric("global/throughput/Transmitted", "mebibits/second", processors["global_bytes_out"].Process(globalStats.total_bytes_out) / 131072);
                 ReportMetric("global/current_conn", "connections", globalStats.total_current_conn);
                 ReportMetric("global/sys_mem_used", "percent",systemMemoryPercentUsed);
                 ReportMetric("global/sys_cpu_busy_percent", "percent", globalStats.sys_cpu_busy_percent);
@@ -107,8 +107,8 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
 
                     // Get Pool Statistics and report to New Relic
                     PoolStatistics poolStats = VTM.fetchVTMObject<PoolStatObject>(pool.href).statistics;
-                    ReportMetric("pools/" + pool.name + "/bytes_in", "bytes/sec", processors["pool_" + pool.name + "_bytes_in"].Process(poolStats.bytes_in));
-                    ReportMetric("pools/" + pool.name + "/bytes_out", "bytes/sec", processors["pool_" + pool.name + "_bytes_out"].Process(poolStats.bytes_out));
+                    ReportMetric("pools/" + pool.name + "/throughput/Received", "mebibits/second", processors["pool_" + pool.name + "_bytes_in"].Process(poolStats.bytes_in) / 131072);
+                    ReportMetric("pools/" + pool.name + "/throughput/Transmitted", "mebibits/second", processors["pool_" + pool.name + "_bytes_out"].Process(poolStats.bytes_out) / 131072);
                     ReportMetric("pools/" + pool.name + "/nodes", "nodes", poolStats.nodes);
                 }
             }
@@ -166,8 +166,8 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
 
                     // Get Virtual Server Statistics and report to New Relic
                     VirtualServerStatistics virtualServerStats = VTM.fetchVTMObject<VirtualServerStatObject>(virtualServer.href).statistics;
-                    ReportMetric("virtual_servers/" + virtualServer.name + "/bytes_in", "bytes/sec", processors["vs_" + virtualServer.name + "_bytes_in"].Process(virtualServerStats.bytes_in));
-                    ReportMetric("virtual_servers/" + virtualServer.name + "/bytes_out", "bytes/sec", processors["vs_" + virtualServer.name + "_bytes_out"].Process(virtualServerStats.bytes_out));
+                    ReportMetric("virtual_servers/" + virtualServer.name + "/throughput/Received", "mebibits/second", processors["vs_" + virtualServer.name + "_bytes_in"].Process(virtualServerStats.bytes_in) / 131072);
+                    ReportMetric("virtual_servers/" + virtualServer.name + "/throughput/Transmitted", "mebibits/second", processors["vs_" + virtualServer.name + "_bytes_out"].Process(virtualServerStats.bytes_out) / 131072);
                     ReportMetric("virtual_servers/" + virtualServer.name + "/current_conn", "connections", virtualServerStats.current_conn);
                 }
             }
