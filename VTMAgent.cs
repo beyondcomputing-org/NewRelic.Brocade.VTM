@@ -85,7 +85,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
             }
             catch
             {
-                log.Error("Unable to fetch Virtual Server information from the Virtual Traffic Manager '{0}'", this.name);
+                log.Error("Unable to fetch Global information from the Virtual Traffic Manager '{0}'", this.name);
             }
         }
 
@@ -114,7 +114,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
             }
             catch
             {
-                log.Error("Unable to fetch Virtual Server information from the Virtual Traffic Manager '{0}'", this.name);
+                log.Error("Unable to fetch Pool information from the Virtual Traffic Manager '{0}'", this.name);
             }
         }
 
