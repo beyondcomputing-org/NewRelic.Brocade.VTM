@@ -6,6 +6,9 @@ New Relic plugin for Brocade Virtual Traffic Manager
 2. Brocade Virtual Traffic Manager v9.9+ or Stingray SteelApp Traffic Manager 9.9+
 3. Traffic Manager API 3.3
 
+# Known Issues
+There is a memory leak in VTM appliances before version 10.1 - SR32022.  This will cause increased memory usage over time based on my own results about 10-20% per month.
+
 # Traffic Manager Configuration
 It is highly recommended that you do not use the default or full admin user account, but create a specific account for NewRelic to use.
 
