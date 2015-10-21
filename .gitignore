@@ -4,3 +4,5 @@
 
 /bin
 /obj
+/config/plugin.json
+/config/newrelic.json
