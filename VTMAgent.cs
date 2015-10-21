@@ -120,12 +120,12 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
 
         private void PollNodes()
         {
-            try
-            {
-                Children nodes = VTM.fetchVTMObject<Children>("/api/tm/3.3/status/local_tm/statistics/nodes/node");
+            Children nodes = VTM.fetchVTMObject<Children>("/api/tm/3.3/status/local_tm/statistics/nodes/node");
 
-                foreach (var node in nodes.children)
-                {
+            foreach (var node in nodes.children)
+            {
+                try
+                {                
                     // Setup new EpochProcessors for each Node
                     // Check for existance of first Dictionary Item for the Node
                     if (!processors.ContainsKey("node_" + node.name + "_errors"))
@@ -141,10 +141,10 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
                     ReportMetric("nodes/" + node.name + "/current_conn", "connections", nodeStats.current_conn);
                     ReportMetric("nodes/" + node.name + "/current_requests", "requests", nodeStats.current_requests);
                 }
-            }
-            catch
-            {
-                log.Error("Unable to fetch Node information from the Virtual Traffic Manager '{0}'", this.name);
+                catch
+                {
+                    log.Error("Unable to fetch Node information from the Virtual Traffic Manager '{0}' for Node: '{1}'", this.name, node.name);
+                }
             }
         }
 
