@@ -74,7 +74,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
                 }
 
                 // Get Global Statistics and report to New Relic
-                GlobalStatistics globalStats = VTM.fetchVTMObject<GlobalStatObject>("/api/tm/3.3/status/local_tm/statistics/globals").statistics;
+                GlobalStatistics globalStats = VTM.fetchVTMObject<GlobalStatObject>($"/api/tm/{APIVersion}/status/local_tm/statistics/globals").statistics;
 
                 // Calculate System Memory Percent Used
                 float systemMemoryPercentUsed = (((float)globalStats.sys_mem_in_use) / (globalStats.sys_mem_total))*100;
@@ -95,7 +95,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
         {
             try
             {
-                Children pools = VTM.fetchVTMObject<Children>("/api/tm/3.3/status/local_tm/statistics/pools");
+                Children pools = VTM.fetchVTMObject<Children>($"/api/tm/{APIVersion}/status/local_tm/statistics/pools");
 
                 foreach (var pool in pools.children)
                 {
@@ -124,7 +124,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
 
         private void PollNodes()
         {
-            Children nodes = VTM.fetchVTMObject<Children>("/api/tm/3.3/status/local_tm/statistics/nodes/node");
+            Children nodes = VTM.fetchVTMObject<Children>($"/api/tm/{APIVersion}/status/local_tm/statistics/nodes/node");
 
             foreach (var node in nodes.children)
             {
@@ -156,7 +156,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
         {
             try
             {
-                Children virtualServers = VTM.fetchVTMObject<Children>("/api/tm/3.3/status/local_tm/statistics/virtual_servers");
+                Children virtualServers = VTM.fetchVTMObject<Children>($"/api/tm/{APIVersion}/status/local_tm/statistics/virtual_servers");
 
                 foreach (var virtualServer in virtualServers.children)
                 {
