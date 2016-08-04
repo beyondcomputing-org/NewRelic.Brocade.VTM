@@ -112,6 +112,8 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
                     ReportMetric("pools/" + pool.name + "/throughput/Received", "mebibits/second", processors["pool_" + pool.name + "_bytes_in"].Process(poolStats.bytes_in) / 131072);
                     ReportMetric("pools/" + pool.name + "/throughput/Transmitted", "mebibits/second", processors["pool_" + pool.name + "_bytes_out"].Process(poolStats.bytes_out) / 131072);
                     ReportMetric("pools/" + pool.name + "/nodes", "nodes", poolStats.nodes);
+                    ReportMetric("pools/" + pool.name + "/disabled", "nodes", poolStats.disabled);
+                    ReportMetric("pools/" + pool.name + "/draining", "nodes", poolStats.draining);
                 }
             }
             catch
