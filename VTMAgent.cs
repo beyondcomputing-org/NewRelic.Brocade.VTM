@@ -20,22 +20,24 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
         {
             get
             {
-                return "1.3.0";
+                return "1.4.0";
             }
         }
     
         private string name;
         private VTM VTM;
+        private string APIVersion;
 
         // Create Dictionary of EpochProcessors to track rate over time for unknown number of items
         private Dictionary<string,IProcessor> processors = new Dictionary<string,IProcessor>();
 
         private Logger log = Logger.GetLogger(typeof(VTMAgent).Name);
 
-        public VTMAgent(string name, string host, int port, string username, string password)
+        public VTMAgent(string name, string host, int port, string username, string password, string APIVersion)
         {
             this.name = name;
             this.VTM = new VTM(host, port, username, password);
+            this.APIVersion = APIVersion;
         }
 
         /// <summary>
