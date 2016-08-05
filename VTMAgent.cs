@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NewRelic.Platform.Sdk;
 using NewRelic.Platform.Sdk.Utils;
 using NewRelic.Platform.Sdk.Processors;
+using System.Reflection;
 
 namespace Org.BeyondComputing.NewRelic.Brocade.VTM
 {
@@ -20,20 +21,20 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
         {
             get
             {
-                return "1.4.0";
+                return Assembly.GetEntryAssembly().GetName().Version.ToString();
             }
         }
     
         private string name;
         private VTM VTM;
-        private string APIVersion;
+        private double APIVersion;
 
         // Create Dictionary of EpochProcessors to track rate over time for unknown number of items
         private Dictionary<string,IProcessor> processors = new Dictionary<string,IProcessor>();
 
         private Logger log = Logger.GetLogger(typeof(VTMAgent).Name);
 
-        public VTMAgent(string name, string host, int port, string username, string password, string APIVersion)
+        public VTMAgent(string name, string host, int port, string username, string password, double APIVersion)
         {
             this.name = name;
             this.VTM = new VTM(host, port, username, password);
@@ -84,10 +85,20 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
                 ReportMetric("global/current_conn", "connections", globalStats.total_current_conn);
                 ReportMetric("global/sys_mem_used", "percent",systemMemoryPercentUsed);
                 ReportMetric("global/sys_cpu_busy_percent", "percent", globalStats.sys_cpu_busy_percent);
+
+                // Get Global Status API v3.7+
+                if (APIVersion >= 3.7)
+                {
+                    dynamic globalStatus = VTM.fetchVTMObject<dynamic>($"/api/tm/{APIVersion}/status/local_tm/state");
+
+                    ReportMetric("global/errors", "count", globalStatus.state.errors.Count);
+                    ReportMetric("global/failedNodes", "count", globalStatus.state.failed_nodes.Count);
+                }
             }
-            catch
+            catch(Exception e)
             {
                 log.Error("Unable to fetch Global information from the Virtual Traffic Manager '{0}'", this.name);
+                log.Error("Exception Thrown:'{0}'", e.Message);
             }
         }
 
@@ -96,6 +107,13 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
             try
             {
                 Children pools = VTM.fetchVTMObject<Children>($"/api/tm/{APIVersion}/status/local_tm/statistics/pools");
+                dynamic failedNodes = null;
+
+                // Get Global Status API v3.7+
+                if (APIVersion >= 3.7)
+                {
+                    failedNodes = VTM.fetchVTMObject<dynamic>($"/api/tm/{APIVersion}/status/local_tm/state").state.failed_nodes;
+                }
 
                 foreach (var pool in pools.children)
                 {
@@ -114,11 +132,29 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
                     ReportMetric("pools/" + pool.name + "/nodes", "nodes", poolStats.nodes);
                     ReportMetric("pools/" + pool.name + "/disabled", "nodes", poolStats.disabled);
                     ReportMetric("pools/" + pool.name + "/draining", "nodes", poolStats.draining);
+
+                    // Get Global Status API v3.7+
+                    if (failedNodes != null)
+                    {
+                        int failedCount = 0;
+                        foreach (var node in failedNodes)
+                        {
+                            foreach (var p in node.pools)
+                            {
+                                if (p == pool.name)
+                                {
+                                    failedCount += 1;
+                                }
+                            }
+                        }
+                        ReportMetric($"pools/{pool.name}/failed", "nodes", failedCount);
+                    }
                 }
             }
-            catch
+            catch(Exception e)
             {
                 log.Error("Unable to fetch Pool information from the Virtual Traffic Manager '{0}'", this.name);
+                log.Error("Exception Thrown:'{0}'", e.Message);
             }
         }
 
