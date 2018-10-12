@@ -18,6 +18,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
             // HTTP Client settings
             var credentials = new NetworkCredential(username, password);
             var handler = new HttpClientHandler { Credentials = credentials };
+
             var url = string.Format("https://{0}:{1}", host, port);
 
             // Create HTTP Client for all future requests to API

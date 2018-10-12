@@ -12,14 +12,14 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
         public override Agent CreateAgentWithConfiguration(IDictionary<string, object> properties)
         {
             // Set the default version of the API to use if not found in the config file
-            const double _APIVersion = 3.8;
+            const decimal _APIVersion = 6.0m;
 
             string name = (string)properties["name"];
             string host = (string)properties["host"];
             int port = int.Parse((string)properties["port"]);
             string username = (string)properties["username"];
             string password = (string)properties["password"];
-            double APIVersion = properties.ContainsKey("api_version") ? (double)properties["api_version"] : _APIVersion;
+            decimal APIVersion = properties.ContainsKey("api_version") ? (decimal)properties["api_version"] : _APIVersion;
 
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(host) || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
