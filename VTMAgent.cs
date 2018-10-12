@@ -27,14 +27,14 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
     
         private string name;
         private VTM VTM;
-        private double APIVersion;
+        private decimal APIVersion;
 
         // Create Dictionary of EpochProcessors to track rate over time for unknown number of items
         private Dictionary<string,IProcessor> processors = new Dictionary<string,IProcessor>();
 
         private Logger log = Logger.GetLogger(typeof(VTMAgent).Name);
 
-        public VTMAgent(string name, string host, int port, string username, string password, double APIVersion)
+        public VTMAgent(string name, string host, int port, string username, string password, decimal APIVersion)
         {
             this.name = name;
             this.VTM = new VTM(host, port, username, password);
@@ -87,7 +87,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
                 ReportMetric("global/sys_cpu_busy_percent", "percent", globalStats.sys_cpu_busy_percent);
 
                 // Get Global Status API v3.7+
-                if (APIVersion >= 3.7)
+                if (APIVersion >= 3.7m)
                 {
                     dynamic globalStatus = VTM.fetchVTMObject<dynamic>($"/api/tm/{APIVersion}/status/local_tm/state");
 
@@ -110,7 +110,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
                 dynamic failedNodes = null;
 
                 // Get Global Status API v3.7+
-                if (APIVersion >= 3.7)
+                if (APIVersion >= 3.7m)
                 {
                     failedNodes = VTM.fetchVTMObject<dynamic>($"/api/tm/{APIVersion}/status/local_tm/state").state.failed_nodes;
                 }
