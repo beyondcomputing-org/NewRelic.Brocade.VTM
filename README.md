@@ -1,10 +1,10 @@
 # Org.BeyondComputing.NewRelic.Brocade.VTM
-New Relic plugin for Brocade Virtual Traffic Manager
+New Relic plugin for Pulse Virtual Traffic Manager Appliance - previously Brocade
 
 # Requirements
 1. .Net 4.5
-2. Brocade Virtual Traffic Manager v9.9+ or Stingray SteelApp Traffic Manager 9.9+
-3. Traffic Manager API v3.8 by default and for full functionality or version 3.3+ if specified in plugin.json "api_version"
+2. Brocade Virtual Traffic Manager v9.9+, Stingray SteelApp Traffic Manager 9.9+ or Pulse Secure Traffic Manager
+3. Traffic Manager API v6.0 by default and for full functionality or version 3.3+ if specified in plugin.json "api_version"
 
 # Known Issues
 There is a memory leak in VTM appliances before version 10.1 - SR32022.  This will cause increased memory usage over time based on my own results about 10-20% per month.
