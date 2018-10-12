@@ -17,12 +17,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
         {
             // HTTP Client settings
             var credentials = new NetworkCredential(username, password);
-
             var handler = new HttpClientHandler { Credentials = credentials };
-            #if DEBUG
-            //Trust Self Signed Certs in local development environment
-            ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) => true;
-            #endif
 
             var url = string.Format("https://{0}:{1}", host, port);
 
