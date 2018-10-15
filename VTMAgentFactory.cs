@@ -19,7 +19,7 @@ namespace Org.BeyondComputing.NewRelic.Brocade.VTM
             int port = int.Parse((string)properties["port"]);
             string username = (string)properties["username"];
             string password = (string)properties["password"];
-            decimal APIVersion = properties.ContainsKey("api_version") ? (decimal)properties["api_version"] : _APIVersion;
+            decimal APIVersion = properties.ContainsKey("api_version") ? decimal.Parse(properties["api_version"].ToString()) : _APIVersion;
 
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(host) || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
